@@ -30,5 +30,5 @@ public class User {
 
     private Date datum_pravljenja_naloga;
 
-
+    private String password;
 }

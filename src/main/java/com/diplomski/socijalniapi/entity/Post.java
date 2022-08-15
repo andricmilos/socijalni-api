@@ -1,21 +1,16 @@
 package com.diplomski.socijalniapi.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @ToString
 @NoArgsConstructor
 @Getter
+@Setter
 @AllArgsConstructor
 public class Post {
 
@@ -30,4 +25,7 @@ public class Post {
     private Integer lajkovi;
 
     private Date datum_postavljanja;
+
+    @ManyToOne
+    private User korisnik;
 }
