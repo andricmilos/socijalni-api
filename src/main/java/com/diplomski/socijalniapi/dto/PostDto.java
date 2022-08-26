@@ -1,30 +1,25 @@
 package com.diplomski.socijalniapi.dto;
 
-import com.diplomski.socijalniapi.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class PostDto {
 
     private Integer id;
 
-    private String ime;
+    private String naslov;
 
-    private String prezime;
+    private String tekst;
 
-    private String username;
+    private Integer lajkovi;
 
-    private Date datum_rodjenja;
-
-    private Date datum_pravljenja_naloga;
-
+    private Date datum_postavljanja;
 }

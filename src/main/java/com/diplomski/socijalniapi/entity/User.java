@@ -3,16 +3,15 @@ package com.diplomski.socijalniapi.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @ToString
 @NoArgsConstructor
 @Getter
+@Setter
 @AllArgsConstructor
 public class User {
 
@@ -31,4 +30,7 @@ public class User {
     private Date datum_pravljenja_naloga;
 
     private String password;
+
+    @OneToMany(mappedBy = "korisnik")
+    private List<Post> post;
 }
