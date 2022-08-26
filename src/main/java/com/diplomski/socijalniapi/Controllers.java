@@ -9,11 +9,17 @@ import com.diplomski.socijalniapi.service.PostService;
 import com.diplomski.socijalniapi.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
+import org.springframework.web.bind.annotation.*;
 
+import java.text.Format;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -67,6 +73,43 @@ public class Controllers {
     @GetMapping("/api/post/{Id}")
     public PostDto getPost(@PathVariable("Id") Integer id){
         return convertToDto(ps.getPostById(id));
+    }
+
+    @RequestMapping(value = "/api/user/add",method = RequestMethod.POST)
+    @ResponseBody
+    public String addUser(@RequestParam("ime") String ime, @RequestParam("prezime") String prezime, @RequestParam("username") String username, @RequestParam("datum_rodjenja") String datum_rodjenja,@RequestParam("datum_pravljenja_naloga") String datum_pravljenja_naloga, @RequestParam("password") String password){
+        SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            User novi = new User(ime,prezime,username,format.parse(datum_rodjenja),format.parse(datum_pravljenja_naloga),password);
+            us.createUser(novi);
+            return "Uspesno";
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "Neuspesno";
+    }
+
+    @RequestMapping(value = "/api/user/delete", method = RequestMethod.DELETE)
+    @ResponseBody
+    public String deleteUser(@RequestParam("id") Integer id){
+        us.deleteUser(id);
+        return "Zahtev poslat";
+    }
+
+    @RequestMapping(value = "/api/user/edit",method = RequestMethod.PUT)
+    @ResponseBody
+    public String editUser(@RequestParam("kogaid") Integer id,@RequestParam("ime") String ime, @RequestParam("prezime") String prezime, @RequestParam("username") String username, @RequestParam("datum_rodjenja") String datum_rodjenja,@RequestParam("datum_pravljenja_naloga") String datum_pravljenja_naloga, @RequestParam("password") String password){
+        SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            User novi = new User(ime,prezime,username,format.parse(datum_rodjenja),format.parse(datum_pravljenja_naloga),password);
+            us.updateUser(id,novi);
+            return "Uspesno";
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (RuntimeException r) {
+            return r.getMessage();
+        }
+        return "Neuspesno";
     }
 
     private UserDto convertToDto(User user){

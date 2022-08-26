@@ -33,4 +33,13 @@ public class User {
 
     @OneToMany(mappedBy = "korisnik")
     private List<Post> post;
+
+    public User(String ime, String prezime, String username, Date datum_rodjenja, Date datum_pravljenja_naloga, String password) {
+        this.ime = ime;
+        this.prezime = prezime;
+        this.username = username;
+        this.datum_rodjenja = datum_rodjenja;
+        this.datum_pravljenja_naloga = datum_pravljenja_naloga;
+        this.password = password;
+    }
 }
