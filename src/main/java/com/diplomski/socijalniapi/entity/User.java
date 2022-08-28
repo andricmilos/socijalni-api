@@ -31,6 +31,8 @@ public class User {
 
     private String password;
 
+    private boolean aktiviran;
+
     @OneToMany(mappedBy = "korisnik")
     private List<Post> post;
 
@@ -41,5 +43,7 @@ public class User {
         this.datum_rodjenja = datum_rodjenja;
         this.datum_pravljenja_naloga = datum_pravljenja_naloga;
         this.password = password;
+        aktiviran=false;
     }
+
 }

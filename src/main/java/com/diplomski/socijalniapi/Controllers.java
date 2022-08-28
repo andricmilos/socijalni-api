@@ -75,6 +75,17 @@ public class Controllers {
         return convertToDto(ps.getPostById(id));
     }
 
+    @GetMapping("/api/post/from/{Id}")
+    public List<PostDto> getPostFromUser(@PathVariable("Id") Integer id){
+        User u=us.getUserById(id);
+        List<PostDto> nova=new ArrayList<>();
+        List<Post> stari=u.getPost();
+        for (Post p:stari) {
+            nova.add(convertToDto(p));
+        }
+        return nova;
+    }
+
     @RequestMapping(value = "/api/user/add",method = RequestMethod.POST)
     @ResponseBody
     public String addUser(@RequestParam("ime") String ime, @RequestParam("prezime") String prezime, @RequestParam("username") String username, @RequestParam("datum_rodjenja") String datum_rodjenja,@RequestParam("datum_pravljenja_naloga") String datum_pravljenja_naloga, @RequestParam("password") String password){
@@ -103,6 +114,43 @@ public class Controllers {
         try {
             User novi = new User(ime,prezime,username,format.parse(datum_rodjenja),format.parse(datum_pravljenja_naloga),password);
             us.updateUser(id,novi);
+            return "Uspesno";
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (RuntimeException r) {
+            return r.getMessage();
+        }
+        return "Neuspesno";
+    }
+
+    @RequestMapping(value = "/api/post/add",method = RequestMethod.POST)
+    @ResponseBody
+    public String addPost(@RequestParam("naslov") String naslov, @RequestParam("tekst") String tekst, @RequestParam("lajkovi") Integer lajkovi, @RequestParam("datum_postavljanja") String datum_postavljanja){
+        SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Post novi = new Post(naslov,tekst,lajkovi,format.parse(datum_postavljanja));
+            ps.createPost(novi);
+            return "Uspesno";
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "Neuspesno";
+    }
+
+    @RequestMapping(value = "/api/post/delete", method = RequestMethod.DELETE)
+    @ResponseBody
+    public String deletePost(@RequestParam("id") Integer id){
+        ps.deletePost(id);
+        return "Zahtev poslat";
+    }
+
+    @RequestMapping(value = "/api/post/edit",method = RequestMethod.PUT)
+    @ResponseBody
+    public String editPost(@RequestParam("kogaid") Integer id,@RequestParam("naslov") String naslov, @RequestParam("tekst") String tekst, @RequestParam("lajkovi") Integer lajkovi, @RequestParam("datum_postavljanja") String datum_postavljanja){
+        SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            Post novi = new Post(naslov,tekst,lajkovi,format.parse(datum_postavljanja));
+            ps.updatePost(id,novi);
             return "Uspesno";
         } catch (ParseException e) {
             e.printStackTrace();

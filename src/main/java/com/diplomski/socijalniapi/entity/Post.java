@@ -28,4 +28,11 @@ public class Post {
 
     @ManyToOne
     private User korisnik;
+
+    public Post(String naslov, String tekst, Integer lajkovi, Date datum_postavljanja) {
+        this.naslov = naslov;
+        this.tekst = tekst;
+        this.lajkovi = lajkovi;
+        this.datum_postavljanja = datum_postavljanja;
+    }
 }
