@@ -12,11 +12,10 @@ import java.util.List;
 public class UserService implements IUserService{
 
     @Autowired
-    protected UserRepository ur;
+    protected static UserRepository ur;
 
-    @Override
-    public void deleteAll() {
-        ur.deleteAll();
+    public static UserRepository getUr(){
+        return ur;
     }
 
     @Override
@@ -44,6 +43,7 @@ public class UserService implements IUserService{
         staripost.setDatum_rodjenja(user.getDatum_rodjenja());
         staripost.setDatum_pravljenja_naloga(user.getDatum_pravljenja_naloga());
         staripost.setPassword(user.getPassword());
+        staripost.setRole(user.getRole());
         return ur.save(staripost);
     }
 

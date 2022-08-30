@@ -6,8 +6,6 @@ import java.util.List;
 
 public interface IPostService {
 
-    void deleteAll();
-
     List<Post> getAllPosts();
 
     void deletePost(Integer id);

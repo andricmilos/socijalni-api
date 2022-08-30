@@ -14,11 +14,6 @@ public class PostService implements IPostService{
     protected PostRepository pr;
 
     @Override
-    public void deleteAll() {
-       pr.deleteAll();
-    }
-
-    @Override
     public List<Post> getAllPosts() {
         return pr.findAll();
     }

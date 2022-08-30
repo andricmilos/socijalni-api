@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface IUserService {
 
-    void deleteAll();
-
     List<User> getAll();
 
     void deleteUser(Integer id);
