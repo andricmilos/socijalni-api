@@ -12,9 +12,9 @@ import java.util.List;
 public class UserService implements IUserService{
 
     @Autowired
-    protected static UserRepository ur;
+    protected UserRepository ur;
 
-    public static UserRepository getUr(){
+    public UserRepository getUr(){
         return ur;
     }
 

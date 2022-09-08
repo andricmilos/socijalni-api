@@ -6,6 +6,7 @@ import com.diplomski.socijalniapi.dto.UserDto;
 import com.diplomski.socijalniapi.entity.Post;
 import com.diplomski.socijalniapi.entity.User;
 import com.diplomski.socijalniapi.service.PostService;
+import com.diplomski.socijalniapi.service.UserDetailsServiceImpl;
 import com.diplomski.socijalniapi.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,11 @@ public class Controllers {
     protected PostService ps;
 
     @Autowired
-    protected UserService us;
+    protected UserDetailsServiceImpl serv;
 
     @Autowired
     protected ModelMapper modelMapper;
+
 
     @GetMapping("/")
     public String index(){
@@ -56,14 +58,14 @@ public class Controllers {
 
     @GetMapping("/api/user/{Id}")
     public UserDto getUser(@PathVariable("Id") Integer id){
-        return convertToDto(us.getUserById(id));
+        return convertToDto(serv.getUserService().getUserById(id));
     }
 
     //koristimo UserDto da bi zastitili informacije. Radimo pretvaranje naseg usera u userDto.
     @GetMapping("/api/user/svi")
     public List<UserDto> allUser(){
         List<UserDto> nova=new ArrayList<>();
-        List<User> stari=us.getAll();
+        List<User> stari=serv.getUserService().getAll();
         for (User u:stari) {
             nova.add(convertToDto(u));
         }
@@ -77,7 +79,7 @@ public class Controllers {
 
     @GetMapping("/api/post/from/{Id}")
     public List<PostDto> getPostFromUser(@PathVariable("Id") Integer id){
-        User u=us.getUserById(id);
+        User u=serv.getUserService().getUserById(id);
         List<PostDto> nova=new ArrayList<>();
         List<Post> stari=u.getPost();
         for (Post p:stari) {
@@ -92,7 +94,7 @@ public class Controllers {
         SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
         try {
             User novi = new User(ime,prezime,username,format.parse(datum_rodjenja),format.parse(datum_pravljenja_naloga),password);
-            us.createUser(novi);
+            serv.getUserService().createUser(novi);
             return "Uspesno";
         } catch (ParseException e) {
             e.printStackTrace();
@@ -103,7 +105,7 @@ public class Controllers {
     @RequestMapping(value = "/api/user/delete", method = RequestMethod.DELETE)
     @ResponseBody
     public String deleteUser(@RequestParam("id") Integer id){
-        us.deleteUser(id);
+        serv.getUserService().deleteUser(id);
         return "Zahtev poslat";
     }
 
@@ -113,7 +115,7 @@ public class Controllers {
         SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
         try {
             User novi = new User(ime,prezime,username,format.parse(datum_rodjenja),format.parse(datum_pravljenja_naloga),password);
-            us.updateUser(id,novi);
+            serv.getUserService().updateUser(id,novi);
             return "Uspesno";
         } catch (ParseException e) {
             e.printStackTrace();

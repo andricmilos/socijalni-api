@@ -12,14 +12,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+    @Autowired
+    protected UserService us;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user=UserService.getUr().getUserByUsername(username);
+        User user=us.getUr().getUserByUsername(username);
         if(user==null)
         {
             throw new UsernameNotFoundException("Korisnik nije pronadjen");
         }
 
         return new MyUserDetails(user);
+    }
+
+    public UserService getUserService(){
+
+        return us;
     }
 }
