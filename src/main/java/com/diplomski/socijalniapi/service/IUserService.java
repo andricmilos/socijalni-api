@@ -15,5 +15,5 @@ public interface IUserService {
 
     User updateUser(Integer id,User user);
 
-    User createUser(User user);
+    User createUser(User user) throws RuntimeException;
 }

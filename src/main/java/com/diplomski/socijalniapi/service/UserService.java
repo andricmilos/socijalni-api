@@ -4,6 +4,7 @@ import com.diplomski.socijalniapi.entity.Post;
 import com.diplomski.socijalniapi.entity.User;
 import com.diplomski.socijalniapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,9 @@ public class UserService implements IUserService{
 
     @Autowired
     protected UserRepository ur;
+
+    @Autowired
+    protected PasswordEncoder passwordEncoder;
 
     public UserRepository getUr(){
         return ur;
@@ -42,13 +46,31 @@ public class UserService implements IUserService{
         staripost.setUsername(user.getUsername());
         staripost.setDatum_rodjenja(user.getDatum_rodjenja());
         staripost.setDatum_pravljenja_naloga(user.getDatum_pravljenja_naloga());
-        staripost.setPassword(user.getPassword());
+        //staripost.setPassword(user.getPassword());
+        staripost.setPassword(passwordEncoder.encode(user.getPassword()));
         staripost.setRole(user.getRole());
         return ur.save(staripost);
     }
 
     @Override
     public User createUser(User user) {
-        return ur.save(user);
+        User novi=new User(user);
+        novi.setPassword(passwordEncoder.encode(novi.getPassword()));
+        if (isUsernameDefined(novi.getUsername())) {
+            throw new RuntimeException("Username vec postoji");
+        }
+        return ur.save(novi);
+    }
+
+    public boolean isUsernameDefined(String username){
+
+        List<User> svi = ur.findAll();
+        for (User u:svi) {
+            if(u.getUsername().equals(username)){
+                return true;
+            }
+        }
+
+        return false;
     }
 }

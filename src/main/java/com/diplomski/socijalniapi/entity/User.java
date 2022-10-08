@@ -49,4 +49,16 @@ public class User {
         aktiviran=false;
     }
 
+    public User(User u) {
+        this.id = u.getId();
+        this.ime = u.getIme();
+        this.prezime = u.getPrezime();
+        this.username = u.getUsername();
+        this.datum_rodjenja = u.getDatum_rodjenja();
+        this.datum_pravljenja_naloga = u.getDatum_pravljenja_naloga();
+        this.password = u.getPassword();
+        this.aktiviran = u.isAktiviran();
+        this.role = u.getRole();
+        this.post = u.getPost();
+    }
 }
