@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,9 +37,10 @@ public class Controllers {
     protected ModelMapper modelMapper;
 
 
-    @GetMapping("/")
-    public String index(){
-        return "CAO";
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public void method(HttpServletResponse httpServletResponse) {
+        httpServletResponse.setHeader("Location", "http://localhost:3000/");
+        httpServletResponse.setStatus(302);
     }
 
     @GetMapping("/api")
