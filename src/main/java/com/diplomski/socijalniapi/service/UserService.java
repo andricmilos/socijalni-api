@@ -41,6 +41,7 @@ public class UserService implements IUserService{
     @Override
     public User updateUser(Integer id, User user) {
         User staripost=ur.findById(id).orElseThrow(() -> new RuntimeException("Korisnik ne postoji")); //FIXME Napraviti izuzetak
+        staripost.setEmail(user.getEmail());
         staripost.setIme(user.getIme());
         staripost.setPrezime(user.getPrezime());
         staripost.setUsername(user.getUsername());

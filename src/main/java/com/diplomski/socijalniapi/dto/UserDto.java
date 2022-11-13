@@ -17,6 +17,8 @@ public class UserDto {
 
     private Integer id;
 
+    private String email;
+
     private String ime;
 
     private String prezime;

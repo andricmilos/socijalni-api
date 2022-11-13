@@ -19,6 +19,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    private String email;
+
     private String ime;
 
     private String prezime;
@@ -38,7 +40,8 @@ public class User {
     @OneToMany(mappedBy = "korisnik")
     private List<Post> post;
 
-    public User(String ime, String prezime, String username, Date datum_rodjenja, Date datum_pravljenja_naloga, String password) {
+    public User(String email, String ime, String prezime, String username, Date datum_rodjenja, Date datum_pravljenja_naloga, String password) {
+        this.email = email;
         this.ime = ime;
         this.prezime = prezime;
         this.username = username;
@@ -51,6 +54,7 @@ public class User {
 
     public User(User u) {
         this.id = u.getId();
+        this.email = u.getEmail();
         this.ime = u.getIme();
         this.prezime = u.getPrezime();
         this.username = u.getUsername();
