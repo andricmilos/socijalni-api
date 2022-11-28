@@ -94,9 +94,10 @@ public class Controllers {
     @RequestMapping(value = "/api/user/add",method = RequestMethod.POST)
     @ResponseBody
     public String addUser(@RequestParam("email") String email, @RequestParam("ime") String ime, @RequestParam("prezime") String prezime, @RequestParam("username") String username, @RequestParam("datum_rodjenja") String datum_rodjenja,@RequestParam("datum_pravljenja_naloga") String datum_pravljenja_naloga, @RequestParam("password") String password){
-        SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format2=new SimpleDateFormat("MM/dd/yyyy, hh:mm:ss aa");
         try {
-            User novi = new User(email,ime,prezime,username,format.parse(datum_rodjenja),format.parse(datum_pravljenja_naloga),password);
+            User novi = new User(email,ime,prezime,username,format.parse(datum_rodjenja),format2.parse(datum_pravljenja_naloga),password);
             serv.getUserService().createUser(novi);
             return "Uspesno";
         } catch (ParseException e) {
