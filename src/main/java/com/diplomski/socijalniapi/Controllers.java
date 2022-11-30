@@ -49,6 +49,11 @@ public class Controllers {
         return "CAO";
     }
 
+    @GetMapping("/api/validate/login")
+    public String validateLogin(){
+        return "valid";
+    }
+
     @GetMapping("/api/post/svi")
     public List<PostDto> allPost(){
         List<PostDto> nova=new ArrayList<>();

@@ -20,6 +20,7 @@ public class Post {
 
     private String naslov;
 
+    @Column(length = 1000)
     private String tekst;
 
     private Integer lajkovi;
