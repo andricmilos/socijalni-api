@@ -11,7 +11,13 @@ import com.diplomski.socijalniapi.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletResponse;
 import java.text.Format;
@@ -26,7 +32,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-public class Controllers {
+public class Controllers extends ResponseEntityExceptionHandler {
 
     @Autowired
     protected PostService ps;
@@ -96,9 +102,9 @@ public class Controllers {
         return nova;
     }
 
-    @RequestMapping(value = "/api/user/add",method = RequestMethod.POST)
+    @RequestMapping(value = "/api/user/add",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String addUser(@RequestParam("email") String email, @RequestParam("ime") String ime, @RequestParam("prezime") String prezime, @RequestParam("username") String username, @RequestParam("datum_rodjenja") String datum_rodjenja,@RequestParam("datum_pravljenja_naloga") String datum_pravljenja_naloga, @RequestParam("password") String password){
+    public String addUser(@JsonArg("email") String email, @JsonArg("ime") String ime, @JsonArg("prezime") String prezime, @JsonArg("username") String username, @JsonArg("datum_rodjenja") String datum_rodjenja,@JsonArg("datum_pravljenja_naloga") String datum_pravljenja_naloga, @JsonArg("password") String password){
         SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat format2=new SimpleDateFormat("MM/dd/yyyy, hh:mm:ss aa");
         try {
@@ -169,6 +175,15 @@ public class Controllers {
             return r.getMessage();
         }
         return "Neuspesno";
+    }
+
+    @ExceptionHandler({ RuntimeException.class })
+
+    protected ResponseEntity<Object> handleConflict(
+            RuntimeException ex, WebRequest request) {
+        String bodyOfResponse = ex.getMessage();
+        return handleExceptionInternal(ex, bodyOfResponse,
+                new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
     private UserDto convertToDto(User user){
