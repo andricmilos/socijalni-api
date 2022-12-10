@@ -34,6 +34,13 @@ public class UserService implements IUserService{
     }
 
     @Override
+    public void aktivirajUser(Integer id) {
+        User staripost=ur.findById(id).orElseThrow(() -> new RuntimeException("Korisnik ne postoji")); //FIXME Napraviti izuzetak
+        staripost.setAktiviran(!staripost.isAktiviran());
+        ur.save(staripost);
+    }
+
+    @Override
     public User getUserById(Integer id) {
         return ur.findById(id).orElseThrow(() -> new RuntimeException("Greska"));
     }
@@ -47,7 +54,13 @@ public class UserService implements IUserService{
         staripost.setUsername(user.getUsername());
         staripost.setDatum_rodjenja(user.getDatum_rodjenja());
         staripost.setDatum_pravljenja_naloga(user.getDatum_pravljenja_naloga());
-        staripost.setPassword(passwordEncoder.encode(user.getPassword()));
+        if(!user.getPassword().equals("")){
+            staripost.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+        else
+        {
+            staripost.setPassword(staripost.getPassword());
+        }
         staripost.setRole(user.getRole());
         return ur.save(staripost);
     }

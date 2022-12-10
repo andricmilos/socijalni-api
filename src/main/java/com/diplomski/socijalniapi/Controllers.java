@@ -124,13 +124,22 @@ public class Controllers extends ResponseEntityExceptionHandler {
         return "Zahtev poslat";
     }
 
-    @RequestMapping(value = "/api/user/edit",method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/user/aktiviraj", method = RequestMethod.POST)
     @ResponseBody
-    public String editUser(@RequestParam("email") String email, @RequestParam("kogaid") Integer id,@RequestParam("ime") String ime, @RequestParam("prezime") String prezime, @RequestParam("username") String username, @RequestParam("datum_rodjenja") String datum_rodjenja,@RequestParam("datum_pravljenja_naloga") String datum_pravljenja_naloga, @RequestParam("password") String password){
-        SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+    public String aktivirajUser(@RequestParam("id") Integer id){
+        serv.getUserService().aktivirajUser(id);
+        return "Zahtev poslat";
+    }
+
+    @RequestMapping(value = "/api/user/edit",method = RequestMethod.POST)
+    @ResponseBody
+    public String editUser(@RequestParam("email") String email, @RequestParam("kogaid") String id,@RequestParam("ime") String ime, @RequestParam("prezime") String prezime, @RequestParam("username") String username, @RequestParam("datum_rodjenja") String datum_rodjenja,@RequestParam("datum_pravljenja_naloga") String datum_pravljenja_naloga, @RequestParam("password") String password){
+        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format2=new SimpleDateFormat("MM/dd/yyyy, hh:mm:ss aa");
         try {
-            User novi = new User(email,ime,prezime,username,format.parse(datum_rodjenja),format.parse(datum_pravljenja_naloga),password);
-            serv.getUserService().updateUser(id,novi);
+            User novi = new User(email,ime,prezime,username,format.parse(datum_rodjenja),format2.parse(datum_pravljenja_naloga),password);
+            int mojId=Integer.parseInt(id);
+            serv.getUserService().updateUser(mojId,novi);
             return "Uspesno";
         } catch (ParseException e) {
             e.printStackTrace();

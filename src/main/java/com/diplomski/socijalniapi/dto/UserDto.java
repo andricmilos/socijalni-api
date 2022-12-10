@@ -29,4 +29,6 @@ public class UserDto {
 
     private Date datum_pravljenja_naloga;
 
+    private boolean aktiviran;
+
 }

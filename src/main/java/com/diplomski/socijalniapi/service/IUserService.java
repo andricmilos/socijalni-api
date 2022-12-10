@@ -11,6 +11,8 @@ public interface IUserService {
 
     void deleteUser(Integer id);
 
+    void aktivirajUser(Integer id);
+
     User getUserById(Integer id);
 
     User updateUser(Integer id,User user);
