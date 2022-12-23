@@ -170,10 +170,10 @@ public class Controllers extends ResponseEntityExceptionHandler {
         return "Zahtev poslat";
     }
 
-    @RequestMapping(value = "/api/post/edit",method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/post/edit",method = RequestMethod.POST)
     @ResponseBody
     public String editPost(@RequestParam("kogaid") Integer id,@RequestParam("naslov") String naslov, @RequestParam("tekst") String tekst, @RequestParam("lajkovi") Integer lajkovi, @RequestParam("datum_postavljanja") String datum_postavljanja){
-        SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
         try {
             Post novi = new Post(naslov,tekst,lajkovi,format.parse(datum_postavljanja));
             ps.updatePost(id,novi);
