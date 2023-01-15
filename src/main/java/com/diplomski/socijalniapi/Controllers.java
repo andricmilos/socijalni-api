@@ -102,17 +102,16 @@ public class Controllers extends ResponseEntityExceptionHandler {
         return nova;
     }
 
-    @RequestMapping(value = "/api/user/add",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String addUser(@JsonArg("email") String email, @JsonArg("ime") String ime, @JsonArg("prezime") String prezime, @JsonArg("username") String username, @JsonArg("datum_rodjenja") String datum_rodjenja,@JsonArg("datum_pravljenja_naloga") String datum_pravljenja_naloga, @JsonArg("password") String password){
+    @GetMapping(value = "/api/user/add")
+    public String addUser(@RequestParam String email, @RequestParam String ime, @RequestParam String prezime, @RequestParam String username, @RequestParam String datum_rodjenja, @RequestParam String datum_pravljenja_naloga, @RequestParam String password){
         SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat format2=new SimpleDateFormat("MM/dd/yyyy, hh:mm:ss aa");
+        SimpleDateFormat format2=new SimpleDateFormat("MM/dd/yyyy, hh:mm:ss");
         try {
             User novi = new User(email,ime,prezime,username,format.parse(datum_rodjenja),format2.parse(datum_pravljenja_naloga),password);
             serv.getUserService().createUser(novi);
             return "Uspesno";
         } catch (ParseException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return "Neuspesno";
     }
@@ -149,9 +148,8 @@ public class Controllers extends ResponseEntityExceptionHandler {
         return "Neuspesno";
     }
 
-    @RequestMapping(value = "/api/post/add",method = RequestMethod.POST)
-    @ResponseBody
-    public String addPost(@RequestParam("naslov") String naslov, @RequestParam("tekst") String tekst, @RequestParam("lajkovi") Integer lajkovi, @RequestParam("datum_postavljanja") String datum_postavljanja){
+    @GetMapping(value = "/api/post/add")
+    public String addPost(@RequestParam String naslov, @RequestParam String tekst, @RequestParam Integer lajkovi, @RequestParam String datum_postavljanja){
         SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
         try {
             Post novi = new Post(naslov,tekst,lajkovi,format.parse(datum_postavljanja));
