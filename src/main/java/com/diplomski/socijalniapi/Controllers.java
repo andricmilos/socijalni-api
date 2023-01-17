@@ -130,14 +130,13 @@ public class Controllers extends ResponseEntityExceptionHandler {
         return "Zahtev poslat";
     }
 
-    @RequestMapping(value = "/api/user/edit",method = RequestMethod.POST)
-    @ResponseBody
-    public String editUser(@RequestParam("email") String email, @RequestParam("kogaid") String id,@RequestParam("ime") String ime, @RequestParam("prezime") String prezime, @RequestParam("username") String username, @RequestParam("datum_rodjenja") String datum_rodjenja,@RequestParam("datum_pravljenja_naloga") String datum_pravljenja_naloga, @RequestParam("password") String password){
+    @RequestMapping(value = "/api/user/edit")
+    public String editUser(@RequestParam String email, @RequestParam String kogaid,@RequestParam String ime, @RequestParam String prezime, @RequestParam String username, @RequestParam String datum_rodjenja,@RequestParam String datum_pravljenja_naloga, @RequestParam String password){
         SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat format2=new SimpleDateFormat("MM/dd/yyyy, hh:mm:ss aa");
         try {
             User novi = new User(email,ime,prezime,username,format.parse(datum_rodjenja),format2.parse(datum_pravljenja_naloga),password);
-            int mojId=Integer.parseInt(id);
+            int mojId=Integer.parseInt(kogaid);
             serv.getUserService().updateUser(mojId,novi);
             return "Uspesno";
         } catch (ParseException e) {
@@ -168,13 +167,12 @@ public class Controllers extends ResponseEntityExceptionHandler {
         return "Zahtev poslat";
     }
 
-    @RequestMapping(value = "/api/post/edit",method = RequestMethod.POST)
-    @ResponseBody
-    public String editPost(@RequestParam("kogaid") Integer id,@RequestParam("naslov") String naslov, @RequestParam("tekst") String tekst, @RequestParam("lajkovi") Integer lajkovi, @RequestParam("datum_postavljanja") String datum_postavljanja){
-        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
+    @RequestMapping(value = "/api/post/edit")
+    public String editPost(@RequestParam("kogaid") String id,@RequestParam String naslov, @RequestParam String tekst, @RequestParam Integer lajkovi, @RequestParam String datum_postavljanja){
+        SimpleDateFormat format=new SimpleDateFormat("MM/dd/yyyy, hh:mm:ss aa");
         try {
             Post novi = new Post(naslov,tekst,lajkovi,format.parse(datum_postavljanja));
-            ps.updatePost(id,novi);
+            ps.updatePost(Integer.parseInt(id),novi);
             return "Uspesno";
         } catch (ParseException e) {
             e.printStackTrace();
