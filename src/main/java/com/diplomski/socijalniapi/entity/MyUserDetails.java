@@ -21,6 +21,10 @@ public class MyUserDetails implements UserDetails {
         return listRole;
     }
 
+    public Integer getUserId(){
+        return user.getId();
+    }
+
     @Override
     public String getPassword() {
         return user.getPassword();

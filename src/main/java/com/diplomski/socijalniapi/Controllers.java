@@ -3,6 +3,7 @@ package com.diplomski.socijalniapi;
 
 import com.diplomski.socijalniapi.dto.PostDto;
 import com.diplomski.socijalniapi.dto.UserDto;
+import com.diplomski.socijalniapi.entity.MyUserDetails;
 import com.diplomski.socijalniapi.entity.Post;
 import com.diplomski.socijalniapi.entity.User;
 import com.diplomski.socijalniapi.service.PostService;
@@ -15,11 +16,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletResponse;
+import java.net.Authenticator;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,7 +50,7 @@ public class Controllers extends ResponseEntityExceptionHandler {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public void method(HttpServletResponse httpServletResponse) {
-        httpServletResponse.setHeader("Location", "http://localhost:3000/");
+        httpServletResponse.setHeader("Location", "http://localhost:5173/log");
         httpServletResponse.setStatus(302);
     }
 
@@ -84,6 +88,13 @@ public class Controllers extends ResponseEntityExceptionHandler {
             nova.add(convertToDto(u));
         }
         return nova;
+    }
+
+    @GetMapping("/api/user/ulogovani")
+    public String loggedInUser(){
+        Authentication authenticator = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetails myUserDetails= (MyUserDetails) authenticator.getPrincipal();
+        return "{\"ID\":"+myUserDetails.getUserId().toString()+"}";
     }
 
     @GetMapping("/api/post/{Id}")
