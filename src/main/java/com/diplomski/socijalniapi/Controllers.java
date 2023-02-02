@@ -159,10 +159,10 @@ public class Controllers extends ResponseEntityExceptionHandler {
     }
 
     @GetMapping(value = "/api/post/add")
-    public String addPost(@RequestParam String naslov, @RequestParam String tekst, @RequestParam Integer lajkovi, @RequestParam String datum_postavljanja){
+    public String addPost(@RequestParam String naslov, @RequestParam String tekst, @RequestParam String datum_postavljanja){
         SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
         try {
-            Post novi = new Post(naslov,tekst,lajkovi,format.parse(datum_postavljanja));
+            Post novi = new Post(naslov,tekst,format.parse(datum_postavljanja));
             ps.createPost(novi);
             return "Uspesno";
         } catch (ParseException e) {
@@ -179,10 +179,10 @@ public class Controllers extends ResponseEntityExceptionHandler {
     }
 
     @RequestMapping(value = "/api/post/edit")
-    public String editPost(@RequestParam("kogaid") String id,@RequestParam String naslov, @RequestParam String tekst, @RequestParam Integer lajkovi, @RequestParam String datum_postavljanja){
+    public String editPost(@RequestParam("kogaid") String id,@RequestParam String naslov, @RequestParam String tekst, @RequestParam String datum_postavljanja){
         SimpleDateFormat format=new SimpleDateFormat("MM/dd/yyyy, hh:mm:ss aa");
         try {
-            Post novi = new Post(naslov,tekst,lajkovi,format.parse(datum_postavljanja));
+            Post novi = new Post(naslov,tekst,format.parse(datum_postavljanja));
             ps.updatePost(Integer.parseInt(id),novi);
             return "Uspesno";
         } catch (ParseException e) {

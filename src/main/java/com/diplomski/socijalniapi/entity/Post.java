@@ -23,17 +23,14 @@ public class Post {
     @Column(length = 1000)
     private String tekst;
 
-    private Integer lajkovi;
-
     private Date datum_postavljanja;
 
     @ManyToOne
     private User korisnik;
 
-    public Post(String naslov, String tekst, Integer lajkovi, Date datum_postavljanja) {
+    public Post(String naslov, String tekst, Date datum_postavljanja) {
         this.naslov = naslov;
         this.tekst = tekst;
-        this.lajkovi = lajkovi;
         this.datum_postavljanja = datum_postavljanja;
     }
 }
