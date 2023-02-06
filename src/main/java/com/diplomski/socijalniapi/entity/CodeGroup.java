@@ -12,7 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Group {
+public class CodeGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +22,11 @@ public class Group {
 
     @Column(length = 1000)
     private String opis;
+
+    public CodeGroup(String ime, String opis) {
+        this.ime = ime;
+        this.opis = opis;
+    }
 
 }
 

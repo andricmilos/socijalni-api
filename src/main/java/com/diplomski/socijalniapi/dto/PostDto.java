@@ -20,4 +20,6 @@ public class PostDto {
     private String tekst;
 
     private Date datum_postavljanja;
+
+    private String grupe;
 }

@@ -34,9 +34,9 @@ public class PostService implements IPostService{
         Post staripost=pr.findById(id).orElseThrow(() -> new RuntimeException("Greska")); //FIXME Napraviti izuzetak
         staripost.setNaslov(post.getNaslov());
         staripost.setTekst(post.getTekst());
-        staripost.setLajkovi(post.getLajkovi());
         staripost.setDatum_postavljanja(post.getDatum_postavljanja());
         staripost.setKorisnik(post.getKorisnik());
+        staripost.setGrupe(post.getGrupe());
         return pr.save(staripost);
     }
 

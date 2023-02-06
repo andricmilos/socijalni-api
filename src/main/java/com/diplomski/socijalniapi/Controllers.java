@@ -3,18 +3,17 @@ package com.diplomski.socijalniapi;
 
 import com.diplomski.socijalniapi.dto.PostDto;
 import com.diplomski.socijalniapi.dto.UserDto;
+import com.diplomski.socijalniapi.entity.CodeGroup;
 import com.diplomski.socijalniapi.entity.MyUserDetails;
 import com.diplomski.socijalniapi.entity.Post;
 import com.diplomski.socijalniapi.entity.User;
+import com.diplomski.socijalniapi.service.CodeGroupService;
 import com.diplomski.socijalniapi.service.PostService;
 import com.diplomski.socijalniapi.service.UserDetailsServiceImpl;
-import com.diplomski.socijalniapi.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,15 +22,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.servlet.http.HttpServletResponse;
-import java.net.Authenticator;
-import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -40,6 +33,9 @@ public class Controllers extends ResponseEntityExceptionHandler {
 
     @Autowired
     protected PostService ps;
+
+    @Autowired
+    protected CodeGroupService gs;
 
     @Autowired
     protected UserDetailsServiceImpl serv;
@@ -72,6 +68,16 @@ public class Controllers extends ResponseEntityExceptionHandler {
             nova.add(convertToDto(p));
         }
         return nova;
+    }
+
+    @GetMapping("/api/group/svi")
+    public List<CodeGroup> allGroup(){
+        return gs.getAllCodeGroups();
+    }
+
+    @GetMapping("/api/group/{Id}")
+    public CodeGroup getGroup(@PathVariable("Id") Integer id){
+        return gs.getCodeGroupById(id);
     }
 
     @GetMapping("/api/user/{Id}")
@@ -127,6 +133,35 @@ public class Controllers extends ResponseEntityExceptionHandler {
         return "Neuspesno";
     }
 
+    @GetMapping(value = "/api/group/add")
+    public String addGroup(@RequestParam String ime, @RequestParam String opis)
+    {
+        CodeGroup novi=new CodeGroup(ime,opis);
+        gs.createCodeGroup(novi);
+        return "Uspesno";
+    }
+
+    @GetMapping(value = "/api/group/edit")
+    public String addGroup(@RequestParam String kogaid,@RequestParam String ime, @RequestParam String opis)
+    {
+        try {
+            CodeGroup novi=new CodeGroup(ime,opis);
+            int mojId=Integer.parseInt(kogaid);
+            gs.updateCodeGroup(mojId,novi);
+            return "Uspesno";
+        } catch (RuntimeException r) {
+            return r.getMessage();
+        }
+    }
+
+    @RequestMapping(value = "/api/group/delete", method = RequestMethod.DELETE)
+    @ResponseBody
+    public String deleteGroup(@RequestParam("id") Integer id){
+        gs.deleteCodeGroup(id);
+        return "Zahtev poslat";
+    }
+
+
     @RequestMapping(value = "/api/user/delete", method = RequestMethod.DELETE)
     @ResponseBody
     public String deleteUser(@RequestParam("id") Integer id){
@@ -159,10 +194,10 @@ public class Controllers extends ResponseEntityExceptionHandler {
     }
 
     @GetMapping(value = "/api/post/add")
-    public String addPost(@RequestParam String naslov, @RequestParam String tekst, @RequestParam String datum_postavljanja){
+    public String addPost(@RequestParam String naslov, @RequestParam String tekst, @RequestParam String datum_postavljanja, @RequestParam String grupe){
         SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
         try {
-            Post novi = new Post(naslov,tekst,format.parse(datum_postavljanja));
+            Post novi = new Post(naslov,tekst,format.parse(datum_postavljanja),grupe);
             ps.createPost(novi);
             return "Uspesno";
         } catch (ParseException e) {
@@ -179,10 +214,10 @@ public class Controllers extends ResponseEntityExceptionHandler {
     }
 
     @RequestMapping(value = "/api/post/edit")
-    public String editPost(@RequestParam("kogaid") String id,@RequestParam String naslov, @RequestParam String tekst, @RequestParam String datum_postavljanja){
+    public String editPost(@RequestParam("kogaid") String id,@RequestParam String naslov, @RequestParam String tekst, @RequestParam String datum_postavljanja, @RequestParam String grupe){
         SimpleDateFormat format=new SimpleDateFormat("MM/dd/yyyy, hh:mm:ss aa");
         try {
-            Post novi = new Post(naslov,tekst,format.parse(datum_postavljanja));
+            Post novi = new Post(naslov,tekst,format.parse(datum_postavljanja),grupe);
             ps.updatePost(Integer.parseInt(id),novi);
             return "Uspesno";
         } catch (ParseException e) {
@@ -203,13 +238,11 @@ public class Controllers extends ResponseEntityExceptionHandler {
     }
 
     private UserDto convertToDto(User user){
-        UserDto userDto=modelMapper.map(user,UserDto.class);
-        return userDto;
+        return modelMapper.map(user,UserDto.class);
     }
 
     private PostDto convertToDto(Post post){
-        PostDto postDto=modelMapper.map(post,PostDto.class);
-        return postDto;
+        return modelMapper.map(post,PostDto.class);
     }
 
 }

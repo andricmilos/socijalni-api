@@ -37,6 +37,8 @@ public class User {
 
     private String role;
 
+    private String grupe;
+
     @OneToMany(mappedBy = "korisnik")
     private List<Post> post;
 
@@ -50,6 +52,7 @@ public class User {
         this.password = password;
         role="basic";
         aktiviran=false;
+        this.grupe="";
     }
 
     public User(User u) {
@@ -64,5 +67,6 @@ public class User {
         this.aktiviran = u.isAktiviran();
         this.role = u.getRole();
         this.post = u.getPost();
+        this.grupe=u.getGrupe();
     }
 }

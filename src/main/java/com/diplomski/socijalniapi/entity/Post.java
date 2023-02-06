@@ -28,9 +28,11 @@ public class Post {
     @ManyToOne
     private User korisnik;
 
-    public Post(String naslov, String tekst, Date datum_postavljanja) {
+    private String grupe;
+    public Post(String naslov, String tekst, Date datum_postavljanja,String grupe) {
         this.naslov = naslov;
         this.tekst = tekst;
         this.datum_postavljanja = datum_postavljanja;
+        this.grupe=grupe;
     }
 }
