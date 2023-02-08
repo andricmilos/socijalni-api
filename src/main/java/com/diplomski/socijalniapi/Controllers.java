@@ -177,11 +177,11 @@ public class Controllers extends ResponseEntityExceptionHandler {
     }
 
     @RequestMapping(value = "/api/user/edit")
-    public String editUser(@RequestParam String email, @RequestParam String kogaid,@RequestParam String ime, @RequestParam String prezime, @RequestParam String username, @RequestParam String datum_rodjenja,@RequestParam String datum_pravljenja_naloga, @RequestParam String password){
+    public String editUser(@RequestParam String email, @RequestParam String kogaid,@RequestParam String ime, @RequestParam String prezime, @RequestParam String username, @RequestParam String datum_rodjenja,@RequestParam String datum_pravljenja_naloga, @RequestParam String password, @RequestParam String grupe){
         SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat format2=new SimpleDateFormat("MM/dd/yyyy, hh:mm:ss aa");
         try {
-            User novi = new User(email,ime,prezime,username,format.parse(datum_rodjenja),format2.parse(datum_pravljenja_naloga),password);
+            User novi = new User(email,ime,prezime,username,format.parse(datum_rodjenja),format2.parse(datum_pravljenja_naloga),password,grupe);
             int mojId=Integer.parseInt(kogaid);
             serv.getUserService().updateUser(mojId,novi);
             return "Uspesno";

@@ -29,6 +29,8 @@ public class UserDto {
 
     private Date datum_pravljenja_naloga;
 
+    private String grupe;
+
     private boolean aktiviran;
 
 }

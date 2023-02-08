@@ -55,6 +55,19 @@ public class User {
         this.grupe="";
     }
 
+    public User(String email, String ime, String prezime, String username, Date datum_rodjenja, Date datum_pravljenja_naloga, String password, String grupe) {
+        this.email = email;
+        this.ime = ime;
+        this.prezime = prezime;
+        this.username = username;
+        this.datum_rodjenja = datum_rodjenja;
+        this.datum_pravljenja_naloga = datum_pravljenja_naloga;
+        this.password = password;
+        role="basic";
+        aktiviran=false;
+        this.grupe=grupe;
+    }
+
     public User(User u) {
         this.id = u.getId();
         this.email = u.getEmail();
