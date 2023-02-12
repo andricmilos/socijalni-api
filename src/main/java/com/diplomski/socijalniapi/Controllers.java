@@ -46,7 +46,14 @@ public class Controllers extends ResponseEntityExceptionHandler {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public void method(HttpServletResponse httpServletResponse) {
-        httpServletResponse.setHeader("Location", "http://localhost:5173/log");
+        Authentication authenticator = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetails myUserDetails= (MyUserDetails) authenticator.getPrincipal();
+        if (myUserDetails.getUserRole().equals("basic")) {
+            httpServletResponse.setHeader("Location", "http://localhost:5173/log");
+        } else {
+            httpServletResponse.setHeader("Location", "http://localhost:3000/");
+        }
+
         httpServletResponse.setStatus(302);
     }
 
