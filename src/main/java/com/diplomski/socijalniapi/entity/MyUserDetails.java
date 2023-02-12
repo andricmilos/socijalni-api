@@ -21,6 +21,8 @@ public class MyUserDetails implements UserDetails {
         return listRole;
     }
 
+    public String getUserRole() { return user.getRole(); }
+
     public Integer getUserId(){
         return user.getId();
     }

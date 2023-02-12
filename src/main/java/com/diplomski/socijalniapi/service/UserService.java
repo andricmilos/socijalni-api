@@ -54,6 +54,7 @@ public class UserService implements IUserService{
         staripost.setUsername(user.getUsername());
         staripost.setDatum_rodjenja(user.getDatum_rodjenja());
         staripost.setDatum_pravljenja_naloga(user.getDatum_pravljenja_naloga());
+        staripost.setGrupe(user.getGrupe());
         if(!user.getPassword().equals("")){
             staripost.setPassword(passwordEncoder.encode(user.getPassword()));
         }
@@ -61,7 +62,7 @@ public class UserService implements IUserService{
         {
             staripost.setPassword(staripost.getPassword());
         }
-        staripost.setRole(user.getRole());
+        //staripost.setRole(user.getRole());
         return ur.save(staripost);
     }
 

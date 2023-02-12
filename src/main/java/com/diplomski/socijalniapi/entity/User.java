@@ -37,6 +37,8 @@ public class User {
 
     private String role;
 
+    private String grupe;
+
     @OneToMany(mappedBy = "korisnik")
     private List<Post> post;
 
@@ -50,6 +52,20 @@ public class User {
         this.password = password;
         role="basic";
         aktiviran=false;
+        this.grupe="";
+    }
+
+    public User(String email, String ime, String prezime, String username, Date datum_rodjenja, Date datum_pravljenja_naloga, String password, String grupe) {
+        this.email = email;
+        this.ime = ime;
+        this.prezime = prezime;
+        this.username = username;
+        this.datum_rodjenja = datum_rodjenja;
+        this.datum_pravljenja_naloga = datum_pravljenja_naloga;
+        this.password = password;
+        role="basic";
+        aktiviran=false;
+        this.grupe=grupe;
     }
 
     public User(User u) {
@@ -64,5 +80,6 @@ public class User {
         this.aktiviran = u.isAktiviran();
         this.role = u.getRole();
         this.post = u.getPost();
+        this.grupe=u.getGrupe();
     }
 }

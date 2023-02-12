@@ -19,7 +19,7 @@ public class PostDto {
 
     private String tekst;
 
-    private Integer lajkovi;
-
     private Date datum_postavljanja;
+
+    private String grupe;
 }
