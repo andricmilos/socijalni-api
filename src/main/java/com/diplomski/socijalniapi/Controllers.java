@@ -117,6 +117,17 @@ public class Controllers extends ResponseEntityExceptionHandler {
         return convertToDto(ps.getPostById(id));
     }
 
+    @GetMapping("/api/post/from/group/{Id}")
+    public List<PostDto> getPostFromGroup(@PathVariable("Id") Integer id){
+        List<PostDto> nova=new ArrayList<>();
+        List<Post> stari=ps.getAllPosts();
+        for (Post p:stari) {
+            if(p.getGrupe().equals(String.valueOf(id)))
+                nova.add(convertToDto(p));
+        }
+        return nova;
+    }
+
     @GetMapping("/api/post/from/{Id}")
     public List<PostDto> getPostFromUser(@PathVariable("Id") Integer id){
         User u=serv.getUserService().getUserById(id);
