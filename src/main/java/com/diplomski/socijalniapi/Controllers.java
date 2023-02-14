@@ -64,7 +64,9 @@ public class Controllers extends ResponseEntityExceptionHandler {
 
     @GetMapping("/api/validate/login")
     public String validateLogin(){
-        return "valid";
+        Authentication authenticator = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetails myUserDetails= (MyUserDetails) authenticator.getPrincipal();
+        return myUserDetails.getUserRole();
     }
 
     @GetMapping("/api/post/svi")
