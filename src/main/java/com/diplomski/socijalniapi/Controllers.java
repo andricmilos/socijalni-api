@@ -3,12 +3,10 @@ package com.diplomski.socijalniapi;
 
 import com.diplomski.socijalniapi.dto.PostDto;
 import com.diplomski.socijalniapi.dto.UserDto;
-import com.diplomski.socijalniapi.entity.CodeGroup;
-import com.diplomski.socijalniapi.entity.MyUserDetails;
-import com.diplomski.socijalniapi.entity.Post;
-import com.diplomski.socijalniapi.entity.User;
+import com.diplomski.socijalniapi.entity.*;
 import com.diplomski.socijalniapi.service.CodeGroupService;
 import com.diplomski.socijalniapi.service.PostService;
+import com.diplomski.socijalniapi.service.UserCommentService;
 import com.diplomski.socijalniapi.service.UserDetailsServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +35,9 @@ public class Controllers extends ResponseEntityExceptionHandler {
 
     @Autowired
     protected CodeGroupService gs;
+
+    @Autowired
+    protected UserCommentService ucs;
 
     @Autowired
     protected UserDetailsServiceImpl serv;
@@ -134,6 +135,16 @@ public class Controllers extends ResponseEntityExceptionHandler {
         return gs.getCodeGroupById(id);
     }
 
+    @GetMapping("/api/comment/svi")
+    public List<UserComment> allUserComment(){
+        return ucs.getAllUserComment();
+    }
+
+    @GetMapping("/api/comment/{Id}")
+    public UserComment getUserComment(@PathVariable("Id") Integer id){
+        return ucs.getUserCommentById(id);
+    }
+
     @GetMapping("/api/user/{Id}")
     public UserDto getUser(@PathVariable("Id") Integer id){
         return convertToDto(serv.getUserService().getUserById(id));
@@ -207,7 +218,7 @@ public class Controllers extends ResponseEntityExceptionHandler {
     }
 
     @GetMapping(value = "/api/group/edit")
-    public String addGroup(@RequestParam String kogaid,@RequestParam String ime, @RequestParam String opis)
+    public String editGroup(@RequestParam String kogaid,@RequestParam String ime, @RequestParam String opis)
     {
         try {
             CodeGroup novi=new CodeGroup(ime,opis);
@@ -223,6 +234,41 @@ public class Controllers extends ResponseEntityExceptionHandler {
     @ResponseBody
     public String deleteGroup(@RequestParam("id") Integer id){
         gs.deleteCodeGroup(id);
+        return "Zahtev poslat";
+    }
+
+    @GetMapping(value = "/api/comment/add")
+    public String addUserComment(@RequestParam String userId, @RequestParam String postId, @RequestParam String sadrzaj) {
+        try {
+            Integer uid = Integer.parseInt(userId);
+            Integer pid = Integer.parseInt(postId);
+            UserComment novi = new UserComment(uid, pid, sadrzaj);
+            ucs.createUserComment(novi);
+            return "Uspesno";
+        } catch (RuntimeException r) {
+            return r.getMessage();
+        }
+    }
+
+    @GetMapping(value = "/api/comment/edit")
+    public String editUserComment(@RequestParam String kogaid,@RequestParam String userId, @RequestParam String postId, @RequestParam String sadrzaj)
+    {
+        try {
+            Integer uid = Integer.parseInt(userId);
+            Integer pid = Integer.parseInt(postId);
+            UserComment novi = new UserComment(uid, pid, sadrzaj);
+            int mojId=Integer.parseInt(kogaid);
+            ucs.updateUserComment(mojId,novi);
+            return "Uspesno";
+        } catch (RuntimeException r) {
+            return r.getMessage();
+        }
+    }
+
+    @RequestMapping(value = "/api/comment/delete", method = RequestMethod.DELETE)
+    @ResponseBody
+    public String deleteUserComment(@RequestParam("id") Integer id){
+        ucs.deleteUserComment(id);
         return "Zahtev poslat";
     }
 
@@ -260,7 +306,7 @@ public class Controllers extends ResponseEntityExceptionHandler {
 
     @GetMapping(value = "/api/post/add")
     public String addPost(@RequestParam String naslov, @RequestParam String tekst, @RequestParam String datum_postavljanja, @RequestParam String grupe){
-        SimpleDateFormat format=new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat format=new SimpleDateFormat("MM/dd/yyyy");
         try {
             Post novi = new Post(naslov,tekst,format.parse(datum_postavljanja),grupe);
             ps.createPost(novi);
