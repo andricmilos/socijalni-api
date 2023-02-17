@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -67,6 +68,50 @@ public class Controllers extends ResponseEntityExceptionHandler {
         Authentication authenticator = SecurityContextHolder.getContext().getAuthentication();
         MyUserDetails myUserDetails= (MyUserDetails) authenticator.getPrincipal();
         return myUserDetails.getUserRole();
+    }
+
+    @GetMapping("/api/group/subscribe/{id}")
+    public String groupSubscribe(@PathVariable("id") Integer id){
+        Authentication authenticator = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetails myUserDetails= (MyUserDetails) authenticator.getPrincipal();
+        User izvuceni=serv.getUserService().getUserById(myUserDetails.getUserId());
+        User trenutni=new User(izvuceni);
+        String grupe=trenutni.getGrupe();
+        if(!grupe.equals("")) {
+            grupe+=",";
+        }
+        grupe+=id;
+        trenutni.setGrupe(grupe);
+        trenutni.setPassword("");
+        serv.getUserService().updateUser(myUserDetails.getUserId(),trenutni);
+        return "Uspesno";
+    }
+
+    @GetMapping("/api/group/unsubscribe/{id}")
+    public String groupUnsubscribe(@PathVariable("id") Integer id){
+        Authentication authenticator = SecurityContextHolder.getContext().getAuthentication();
+        MyUserDetails myUserDetails= (MyUserDetails) authenticator.getPrincipal();
+        User izvuceni=serv.getUserService().getUserById(myUserDetails.getUserId());
+        User trenutni=new User(izvuceni);
+        String grupe=trenutni.getGrupe();
+        String[] razbijeno=grupe.split(",");
+        List<String> mojaLista=new ArrayList<>();
+        Collections.addAll(mojaLista, razbijeno);
+        if(!mojaLista.contains(String.valueOf(id))){
+            return "Nije pronadjena grupa";
+        }
+        mojaLista.remove(String.valueOf(id));
+        StringBuilder odgovor= new StringBuilder();
+        for(String st:mojaLista) {
+            if (!odgovor.toString().equals("")) {
+                odgovor.append(",");
+            }
+            odgovor.append(st);
+        }
+        trenutni.setGrupe(odgovor.toString());
+        trenutni.setPassword("");
+        serv.getUserService().updateUser(myUserDetails.getUserId(),trenutni);
+        return "Uspesno";
     }
 
     @GetMapping("/api/post/svi")
