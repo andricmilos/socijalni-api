@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -78,6 +79,12 @@ public class Controllers extends ResponseEntityExceptionHandler {
         User izvuceni=serv.getUserService().getUserById(myUserDetails.getUserId());
         User trenutni=new User(izvuceni);
         String grupe=trenutni.getGrupe();
+        String[] razbijeno=grupe.split(",");
+        List<String> mojaLista=new ArrayList<>();
+        Collections.addAll(mojaLista, razbijeno);
+        if(mojaLista.contains(String.valueOf(id))){
+            return "Vec ste subsribovani !!!";
+        }
         if(!grupe.equals("")) {
             grupe+=",";
         }
@@ -195,6 +202,19 @@ public class Controllers extends ResponseEntityExceptionHandler {
         return nova;
     }
 
+    @GetMapping("/api/comment/from/{Id}")
+    public List<UserComment> getUserCommentFromUser(@PathVariable("Id") Integer id){
+        List<UserComment> nova=new ArrayList<>();
+        List<UserComment> stari=ucs.getAllUserComment();
+        for (UserComment p:stari) {
+            if(Objects.equals(p.getPostId(), id))
+            {
+                nova.add(p);
+            }
+        }
+        return nova;
+    }
+
     @GetMapping(value = "/api/user/add")
     public String addUser(@RequestParam String email, @RequestParam String ime, @RequestParam String prezime, @RequestParam String username, @RequestParam String datum_rodjenja, @RequestParam String datum_pravljenja_naloga, @RequestParam String password){
         SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd");
@@ -238,30 +258,34 @@ public class Controllers extends ResponseEntityExceptionHandler {
     }
 
     @GetMapping(value = "/api/comment/add")
-    public String addUserComment(@RequestParam String userId, @RequestParam String postId, @RequestParam String sadrzaj) {
+    public String addUserComment(@RequestParam String userId, @RequestParam String postId, @RequestParam String sadrzaj, @RequestParam String datum_postavljanja) {
         try {
+            SimpleDateFormat format=new SimpleDateFormat("MM/dd/yyyy, hh:mm:ss");
             Integer uid = Integer.parseInt(userId);
             Integer pid = Integer.parseInt(postId);
-            UserComment novi = new UserComment(uid, pid, sadrzaj);
+            UserComment novi = new UserComment(uid, pid, sadrzaj,format.parse(datum_postavljanja));
             ucs.createUserComment(novi);
             return "Uspesno";
-        } catch (RuntimeException r) {
+        } catch (RuntimeException | ParseException r) {
             return r.getMessage();
         }
     }
 
     @GetMapping(value = "/api/comment/edit")
-    public String editUserComment(@RequestParam String kogaid,@RequestParam String userId, @RequestParam String postId, @RequestParam String sadrzaj)
+    public String editUserComment(@RequestParam String kogaid,@RequestParam String userId, @RequestParam String postId, @RequestParam String sadrzaj, @RequestParam String datum_postavljanja)
     {
         try {
+            SimpleDateFormat format=new SimpleDateFormat("MM/dd/yyyy, hh:mm:ss");
             Integer uid = Integer.parseInt(userId);
             Integer pid = Integer.parseInt(postId);
-            UserComment novi = new UserComment(uid, pid, sadrzaj);
+            UserComment novi = new UserComment(uid, pid, sadrzaj,format.parse(datum_postavljanja));
             int mojId=Integer.parseInt(kogaid);
             ucs.updateUserComment(mojId,novi);
             return "Uspesno";
         } catch (RuntimeException r) {
             return r.getMessage();
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
     }
 
