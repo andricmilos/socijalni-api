@@ -20,7 +20,7 @@ public class Post {
 
     private String naslov;
 
-    @Column(length = 1000)
+    @Column(length = 3000)
     private String tekst;
 
     private Date datum_postavljanja;
