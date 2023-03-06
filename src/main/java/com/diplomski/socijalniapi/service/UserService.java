@@ -54,7 +54,14 @@ public class UserService implements IUserService{
         staripost.setUsername(user.getUsername());
         staripost.setDatum_rodjenja(user.getDatum_rodjenja());
         staripost.setDatum_pravljenja_naloga(user.getDatum_pravljenja_naloga());
-        staripost.setGrupe(user.getGrupe());
+        if(user.getGrupe().equals(""))
+        {
+            staripost.setGrupe(staripost.getGrupe());
+        }
+        else
+        {
+            staripost.setGrupe(user.getGrupe());
+        }
         if(!user.getPassword().equals("")){
             staripost.setPassword(passwordEncoder.encode(user.getPassword()));
         }

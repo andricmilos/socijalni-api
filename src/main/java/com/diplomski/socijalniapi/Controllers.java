@@ -132,6 +132,18 @@ public class Controllers extends ResponseEntityExceptionHandler {
         return nova;
     }
 
+    @GetMapping("/api/post/svi/{Id}")
+    public List<PostDto> allPostByUserId(@PathVariable("Id") Integer i){
+        List<PostDto> nova=new ArrayList<>();
+        List<Post> stari=ps.getAllPosts();
+        String user = String.valueOf(i);
+        for (Post p:stari) {
+            if (p.getUser().equals(user))
+                nova.add(convertToDto(p));
+        }
+        return nova;
+    }
+
     @GetMapping("/api/group/svi")
     public List<CodeGroup> allGroup(){
         return gs.getAllCodeGroups();
@@ -329,10 +341,10 @@ public class Controllers extends ResponseEntityExceptionHandler {
     }
 
     @GetMapping(value = "/api/post/add")
-    public String addPost(@RequestParam String naslov, @RequestParam String tekst, @RequestParam String datum_postavljanja, @RequestParam String grupe){
+    public String addPost(@RequestParam String naslov, @RequestParam String tekst, @RequestParam String datum_postavljanja, @RequestParam String grupe, @RequestParam String user){
         SimpleDateFormat format=new SimpleDateFormat("MM/dd/yyyy");
         try {
-            Post novi = new Post(naslov,tekst,format.parse(datum_postavljanja),grupe);
+            Post novi = new Post(naslov,tekst,format.parse(datum_postavljanja),grupe, user);
             ps.createPost(novi);
             return "Uspesno";
         } catch (ParseException e) {
@@ -349,10 +361,10 @@ public class Controllers extends ResponseEntityExceptionHandler {
     }
 
     @RequestMapping(value = "/api/post/edit")
-    public String editPost(@RequestParam("kogaid") String id,@RequestParam String naslov, @RequestParam String tekst, @RequestParam String datum_postavljanja, @RequestParam String grupe){
+    public String editPost(@RequestParam("kogaid") String id,@RequestParam String naslov, @RequestParam String tekst, @RequestParam String datum_postavljanja, @RequestParam String grupe, @RequestParam String user){
         SimpleDateFormat format=new SimpleDateFormat("MM/dd/yyyy, hh:mm:ss aa");
         try {
-            Post novi = new Post(naslov,tekst,format.parse(datum_postavljanja),grupe);
+            Post novi = new Post(naslov,tekst,format.parse(datum_postavljanja),grupe,user);
             ps.updatePost(Integer.parseInt(id),novi);
             return "Uspesno";
         } catch (ParseException e) {

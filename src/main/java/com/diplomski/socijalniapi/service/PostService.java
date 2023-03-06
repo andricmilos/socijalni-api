@@ -37,6 +37,7 @@ public class PostService implements IPostService{
         staripost.setDatum_postavljanja(post.getDatum_postavljanja());
         staripost.setKorisnik(post.getKorisnik());
         staripost.setGrupe(post.getGrupe());
+        staripost.setUser(post.getUser());
         return pr.save(staripost);
     }
 

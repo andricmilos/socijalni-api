@@ -22,4 +22,6 @@ public class PostDto {
     private Date datum_postavljanja;
 
     private String grupe;
+
+    private String user;
 }

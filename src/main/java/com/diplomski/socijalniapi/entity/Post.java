@@ -29,10 +29,13 @@ public class Post {
     private User korisnik;
 
     private String grupe;
-    public Post(String naslov, String tekst, Date datum_postavljanja,String grupe) {
+
+    private String user;
+    public Post(String naslov, String tekst, Date datum_postavljanja,String grupe, String user) {
         this.naslov = naslov;
         this.tekst = tekst;
         this.datum_postavljanja = datum_postavljanja;
         this.grupe=grupe;
+        this.user = user;
     }
 }
